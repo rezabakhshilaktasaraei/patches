@@ -10,15 +10,16 @@ This repository is a fork of [desktop-app/patches](https://github.com/desktop-ap
 |---|---|---|---|
 | [#233](https://github.com/desktop-app/patches/pull/233) | Use RTTI to get class name for accessibility | [@ilya-fedin](https://github.com/ilya-fedin) | [v6.2.5](https://github.com/rezabakhshilaktasaraei/tdesktop-accessible/releases/tag/v6.2.5) |
 | [#245](https://github.com/desktop-app/patches/pull/245) | Add patch: fix toggle state notification for all checkable widgets | [@rezabakhshilaktasaraei](https://github.com/rezabakhshilaktasaraei) | [v6.6.0](https://github.com/rezabakhshilaktasaraei/tdesktop-accessible/releases/tag/v6.6.0) |
-| [#253](https://github.com/desktop-app/patches/pull/253) | Don't require an action interface for UIA SelectionContainer | [@rezabakhshilaktasaraei](https://github.com/rezabakhshilaktasaraei) | v6.9.4 |
+| [#253](https://github.com/desktop-app/patches/pull/253) | Don't require an action interface for UIA SelectionContainer *(later reverted by [#258](https://github.com/desktop-app/patches/pull/258))* | [@rezabakhshilaktasaraei](https://github.com/rezabakhshilaktasaraei) | v6.9.4 |
 | [#254](https://github.com/desktop-app/patches/pull/254) | Backport UIA selection + orientation interfaces for custom tab controls | [@rezabakhshilaktasaraei](https://github.com/rezabakhshilaktasaraei) | v6.9.4 |
 | [#257](https://github.com/desktop-app/patches/pull/257) | Use RTTI in automation ID on Qt 5, too (accessibility commit within "Fixes") | [@ilya-fedin](https://github.com/ilya-fedin) | v6.9.4 |
+| [#258](https://github.com/desktop-app/patches/pull/258) | Revert "Don't require an action interface for UIA SelectionContainer" (no longer needed — items now expose a press action) | [@rezabakhshilaktasaraei](https://github.com/rezabakhshilaktasaraei) | v7.0.1 |
 
 ## What Was Added
 
 - **RTTI-based class name for accessibility** — Qt derives the accessibility class name via RTTI so screen readers see the real widget class instead of a generic one; a follow-up extends the same approach to the UI Automation automation id on Qt 5 ([#233](https://github.com/desktop-app/patches/pull/233), [#257](https://github.com/desktop-app/patches/pull/257))
 - **Toggle state notification fix** — Corrects state-change notifications so all checkable widgets (checkboxes, toggles) announce checked/unchecked updates to screen readers ([#245](https://github.com/desktop-app/patches/pull/245))
-- **UIA SelectionContainer without an action interface** — Allows a control to act as a UI Automation selection container even when it exposes no action interface, needed for custom-painted tab strips ([#253](https://github.com/desktop-app/patches/pull/253)). This Telegram-side fix shipped in **v6.9.4**; the same silent-focus bug is also fixed on the screen reader side in NVDA 2026.3 ([nvda#20255](https://github.com/nvaccess/nvda/pull/20255)) for users on older Telegram builds or other Qt apps.
+- **UIA SelectionContainer without an action interface** *(reverted)* — Originally let a control act as a UI Automation selection container even when it exposed no action interface, working around NVDA going silent on the chat list ([#253](https://github.com/desktop-app/patches/pull/253), shipped **v6.9.4**). Once the painted list items began exposing a press action ([lib_ui#303](https://github.com/desktop-app/lib_ui/pull/303)) the provider passes the check naturally, so the patch was reverted as no longer needed ([#258](https://github.com/desktop-app/patches/pull/258), **v7.0.1**). NVDA 2026.3 ([nvda#20255](https://github.com/nvaccess/nvda/pull/20255)) still guards against the error for older Telegram builds or other Qt apps.
 - **Backported selection & orientation interfaces** — Backports `QAccessibleSelectionInterface` (UIA tab/selection state) and `QAccessibleAttributesInterface` (UIA orientation) from Qt 6 to Qt 5.15 so custom tab controls report selection and orientation correctly ([#254](https://github.com/desktop-app/patches/pull/254))
 
 ## Related Repositories
@@ -29,7 +30,7 @@ This repository is a fork of [desktop-app/patches](https://github.com/desktop-ap
 
 ## Contributors
 
-- **[@rezabakhshilaktasaraei](https://github.com/rezabakhshilaktasaraei)** (Reza Bakhshi Laktasaraei) — toggle state notification fix and the UIA selection/orientation backports ([#245](https://github.com/desktop-app/patches/pull/245), [#253](https://github.com/desktop-app/patches/pull/253), [#254](https://github.com/desktop-app/patches/pull/254)).
+- **[@rezabakhshilaktasaraei](https://github.com/rezabakhshilaktasaraei)** (Reza Bakhshi Laktasaraei) — toggle state notification fix and the UIA selection/orientation backports ([#245](https://github.com/desktop-app/patches/pull/245), [#253](https://github.com/desktop-app/patches/pull/253), [#254](https://github.com/desktop-app/patches/pull/254), [#258](https://github.com/desktop-app/patches/pull/258)).
 - **[@ilya-fedin](https://github.com/ilya-fedin)** (Ilya Fedin) — RTTI-based class name and automation id for accessibility ([#233](https://github.com/desktop-app/patches/pull/233), [#257](https://github.com/desktop-app/patches/pull/257)).
 
 ## License
